@@ -58,7 +58,7 @@
 
        var onConnect = function(key) {
          var mu = M({key:key});
-         mu.members({"relation":"self", "member_id": 1}, function(res) {
+         mu.members({"relation":"self"}, function(res) {
            var mems = res.results;
            if(mems === undefined) {
              localStorage.removeItem("mu:api_key");
