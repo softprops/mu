@@ -27,11 +27,13 @@ html[xmlns] .clearfix { display: block; }
  padding:5px;
  text-decoration:none;
  text-shadow:rgba(1, 1, 1, 0.246094) -1px -1px 1px;
+ -webkit-transition: background-color .25s linear;
+ transition: background-color .25s linear;
 }
 .btn:hover {
   background:#FF7979;
-  -webkit-transition: background-color .5s linear;
-  transition: background-color .5s linear;  
+  -webkit-transition: background-color .25s linear;
+  transition: background-color .25s linear;  
 }
 #header { background: #333; width:385px; color:#fff; padding:.5em; }
 #header h1 { float:left; }
