@@ -31,7 +31,7 @@ html[xmlns] .clearfix { display: block; }
  transition: background-color .25s linear;
 }
 .btn:hover {
-  background:#FF7979;
+  background:#FF74B7;
   -webkit-transition: background-color .25s linear;
   transition: background-color .25s linear;  
 }
