@@ -69,7 +69,7 @@
              $("#errors").empty();
              $("#lists").show();
              localStorage.setItem("mu:api_key", key);
-             var member_id = mems[0].member_id;
+             var member_id = mems[0].id;
              localStorage.setItem("mu:member_id", member_id); 
              $("#me").html(T.user(mems[0]));
              bindOut();    
