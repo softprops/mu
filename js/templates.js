@@ -8,14 +8,14 @@ var T = (function() {
        <div class="emeta"> \
          <strong>{4}</strong> <span class="ename">{5}</span> \
          <div><span class="where">@<a target="_blank" href="http://maps.google.com/maps?q={6}">{6}</a></span> \
-         <span class="when">on {6}</span></div> \
+         <span class="when">on {7}</span></div> \
        </div> \
       </a>';
   var EventWithoutLocation = '<a href="{0}" target="_blank"> \
        <div class="iwrap"><img class="g" src="{1}"/><div class="imeta"><span class="rsvpcnt">+{2}<br/>- {3}</span></div></div> \
        <div class="emeta"> \
-         <strong>{3}</strong> <span class="ename">{4}</span>\
-         <div><span class="when">on {5}</span></div> \
+         <strong>{4}</strong> <span class="ename">{5}</span>\
+         <div><span class="when">on {6}</span></div> \
        </div> \
       </a>'; 
 
