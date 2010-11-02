@@ -1,6 +1,13 @@
 * { margin:0; padding:0; }
 body { font-family:helvetica; color:#333; }
+a {
+  -webkit-transition:color .25s linear;
+  transition:color .25s linear;
+}
 a:link, a:visited { text-decoration:none; color:#FF0084; }
+a:hover {
+  color:#920047;
+}
 #container { height: 300px; width:400px; }
 .rsvpcnt { font-size: 24px; font-weight:bold; }
 img.g { display:block; }
@@ -34,6 +41,9 @@ input[type="text"] { font-size:18px; color:#333; padding:.1em; margin-right:.5em
 #header #me { clear:both; }
 #header #me a { float:none; }
 a.out { color:#FD91C9; }
+a:hover {
+  color:#920047;
+}
 #errors { color:red; }
 #nav li { 
   float:left; 
@@ -71,6 +81,8 @@ a.out { color:#FD91C9; }
   z-index: 2;
   background:#fff;
   opacity:0;
+  -webkit-transition: opacity .25s linear;
+  transition: opacity .25s linear;
 }
 
 .iwrap .imeta:hover {
