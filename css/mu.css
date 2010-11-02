@@ -17,6 +17,20 @@ img.g { display:block; }
 html[xmlns] .clearfix { display: block; }
 * html .clearfix { height: 1%; }
 #my-events li, #near-events li { margin:.25em 0; height:110px; }
+
+#my-events li .xmeta, #near-events li .xmeta {
+  opacity:0;
+  -webkit-transition: opacity .1s linear;
+  transition: opacity .1s linear;
+}
+
+#my-events li:hover .xmeta, #near-events li:hover .xmeta { 
+  opacity:1;
+  -webkit-transition: opacity .1s linear;
+  transition: opacity .1s linear; 
+}
+
+
 .btn { 
  background-color:#C83C6A; 
  background-image:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#D9608B), to(#C83C6A));  
