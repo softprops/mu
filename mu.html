@@ -44,6 +44,7 @@
        $("#keybox").hide();
        $("#lists").hide();
        var error = function(msg) {
+         console.log("error " + msg);
          $("#errors").html(msg);
        };
 
@@ -53,7 +54,7 @@
            e.preventDefault();
            var api_key = $("#api-key").val();
            $("#keybox").hide("fast");
-           after(api_key);
+           after(api_key)
            return false;
          });
        };
@@ -85,37 +86,48 @@
                $("#process").addClass("loading");
                $("#near-events").empty();
                var success = function(position) {
+                 console.log("found location " + position);
                  locCache = position;
                  mu.events({
                   lat: position.coords.latitude, 
                   lon: position.coords.longitude,
                   page: 10
                  }, function(res) {
+                  console.log(res);
                   $("#process").removeClass("loading");
                   var l = $("#near-events");
                   var events = res.results;
                   for(e in events) {
                     l.append(['<li>', T.event(events[e]), '</li>'].join(''));
                   }
+                  console.log("done rendering");
                 });
                };
-               Geo.locate(success, error);
+               var lerr = function(m) {
+                 error(m.message);
+                 $("#process").removeClass("loading");
+               };
+               Geo.locate(success, lerr);
              };
 
              var showMine = function() {
+               $("#errors").empty();
                $("#mine").addClass("active");
                $("#near").removeClass("active");
                $("#mine-content").show();
                $("#near-content").hide();
                $("#my-events").empty();
                $("#process").addClass("loading");
-               mu.events({
-                  member_id: member_id,
-                  status: "upcoming",
-                  lat: locCache.coords.latitude,
-                  lon: locCache.coords.longitude,
-                  page: 10
-                }, function(res) {
+               var args = {
+                 member_id: member_id,
+                 status: "upcoming", 
+                 page: 10
+               };
+               if(locCache) {
+                 args.lat = locCache.coords.latitude;
+                 args.lon = locCache.coords.longitude;
+               }
+               mu.events(args, function(res) {
                   $("#process").removeClass("loading");
                   var l = $("#my-events");
                   var events = res.results;
