@@ -1,0 +1,193 @@
+<html>
+  <head>
+    <title>mu</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/mu.css" />
+  </head>
+  <body>
+   <div id="container">
+    <div class="clearfix" id="header">
+      <h1>mu <span>minimal meetup</span></h1>
+      <div id="me"></div>
+      <div>
+        <a class="btn" id="connect" title="connect with your meetup.com account">Connect with Meetup</a>
+      </div>
+      <div id="keybox"><input type="text" id="api-key" /><a class="btn" id="connect-key">connect key</a> <a class="btn" id="cancel-connect">cancel</a>
+      get <a href="http://www.meetup.com/meetup_api/key/" target="_blank">key</a>
+      </div>
+    </div>
+    <div id="errors"></div>
+    <div id="lists">
+      <ul id="nav">
+        <li id="near" class="active"><a href="#">near by</a></li>
+        <li id="mine"><a href="#">mine</a></li>
+      </ul>
+      <div id="process"></div>
+      <div id="contents">
+        <div id="near-content">
+          <ol id="near-events"></ol>
+        </div>
+        <div id="mine-content">
+          <ol id="my-events"></ol>
+       <div>
+      </div>
+    </div>
+   </div>
+   <script type="text/javascript" src="js/strings.js"></script>
+   <script type="text/javascript" src="js/mu.js"></script>
+   <script type="text/javascript" src="js/templates.js"></script>
+   <script type="text/javascript" src="js/geo.js"></script>
+   <script type="text/javascript">
+     (function($){
+       $("#keybox").hide();
+       $("#lists").hide();
+       var error = function(msg) {
+         $("#errors").html(msg);
+       };
+
+       var keyPrompt = function(after) {
+         $("#keybox").show("fast");
+         $("#connect-key").click(function(e){
+           e.preventDefault();
+           var api_key = $("#api-key").val();
+           $("#keybox").hide("fast");
+           after(api_key);
+           return false;
+         });
+       };
+
+       var onConnect = function(key) {
+         var mu = M({key:key});
+         mu.members({"relation":"self", "member_id": 1}, function(res) {
+           var mems = res.results;
+           if(mems === undefined) {
+             localStorage.removeItem("mu:api_key");
+             error("Invalid api key");
+             connect();
+           } else {
+             $("#connect").hide();
+             $("#errors").empty();
+             $("#lists").show();
+             localStorage.setItem("mu:api_key", key);
+             var member_id = mems[0].member_id;
+             localStorage.setItem("mu:member_id", member_id); 
+             $("#me").html(T.user(mems[0]));
+             bindOut();    
+             var locCache;
+
+             var showNear = function() {
+               $("#near").addClass("active");
+               $("#mine").removeClass("active");
+               $("#near-content").show();
+               $("#mine-content").hide();
+               $("#process").addClass("loading");
+               $("#near-events").empty();
+               var success = function(position) {
+                 locCache = position;
+                 mu.events({
+                  lat: position.coords.latitude, 
+                  lon: position.coords.longitude,
+                  page: 10
+                 }, function(res) {
+                  $("#process").removeClass("loading");
+                  var l = $("#near-events");
+                  var events = res.results;
+                  for(e in events) {
+                    l.append(['<li>', T.event(events[e]), '</li>'].join(''));
+                  }
+                });
+               };
+               Geo.locate(success, error);
+             };
+
+             var showMine = function() {
+               $("#mine").addClass("active");
+               $("#near").removeClass("active");
+               $("#mine-content").show();
+               $("#near-content").hide();
+               $("#my-events").empty();
+               $("#process").addClass("loading");
+               mu.events({
+                  member_id: member_id,
+                  status: "upcoming",
+                  lat: locCache.coords.latitude,
+                  lon: locCache.coords.longitude,
+                  page: 10
+                }, function(res) {
+                  $("#process").removeClass("loading");
+                  var l = $("#my-events");
+                  var events = res.results;
+                  for(e in events) {
+                    l.append(['<li>', T.event(events[e]), '</li>'].join(''));
+                  }
+               }); 
+             };
+
+             $("#near").click(function(e) {
+               e.preventDefault();
+               showNear();
+               return false;
+             });
+
+             $("#mine").click(function(e) {
+               e.preventDefault();
+               showMine();
+               return false;
+              });          
+
+             showNear();
+           } 
+         });        
+       };
+
+       var connect = function() {
+         var api_key = localStorage.getItem("mu:api_key");
+         if(api_key === null) {
+           keyPrompt(onConnect);
+         } else {
+           onConnect(api_key);
+         }
+       };
+
+      var disconnect = function() {
+        $("#me").empty();
+        $("#connect").show();
+        $("#my-events").empty();
+        $("#near-events").empty();
+        $("#lists").hide();
+        localStorage.removeItem("mu:api_key");
+        localStorage.removeItem("mu:member_id")
+      };
+       
+       var bindOut = function() {
+         $(".out").live("click", function(e) {
+           e.preventDefault();
+           disconnect();
+           return false;
+         });
+       };
+         
+       $("#cancel-connect").click(function(e) {
+         e.preventDefault();
+         $("#keybox").hide("fast");
+         disconnect();
+         return false;
+       });
+
+       $("#connect").click(function(e) {
+          e.preventDefault();
+          $(this).hide();
+          connect();
+          return false;
+       });
+        
+       if(localStorage.getItem("mu:member_id")) {
+         $("#connect").hide();
+         connect();
+       } else {
+         $("#connect").show();
+       }  
+     })(jQuery);
+    </script>
+  </body>
+</html>

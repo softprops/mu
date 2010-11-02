@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+     <script type="text/javascript">
+       var badge = function() {
+          var canvas = document.getElementById("icon"),
+            ctx = canvas.getContext('2d'),
+            bg = ctx.createLinearGradient(0, 0, 0, 20),
+            fg = ctx.createLinearGradient(0, 0, 0, 70),
+            x = 0, y = 3, h = canvas.height, w = canvas.width, r = 4;
+
+         ctx.clearRect(0,0,canvas.width, canvas.height);
+
+         ctx.font = "bold 10px sans-serif";
+   
+         bg.addColorStop(0, "rgba(255,17,120,255)");
+         bg.addColorStop(1, "rgba(212,3,69,255)");
+   
+         fg.addColorStop(0, "rgba(255,255,255,255)");
+         fg.addColorStop(1, "rgba(219,219,219,255)");
+   
+         ctx.beginPath();
+         ctx.moveTo(x + r, y);
+         ctx.lineTo(x + w - r, y);
+         ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+         ctx.lineTo(x + w, y + h - r);
+         ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+         ctx.lineTo(x + r, y + h);
+         ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+         ctx.lineTo(x, y + r);
+         ctx.quadraticCurveTo(x, y, x + r, y);
+         ctx.closePath();
+         ctx.fillStyle = bg;
+         ctx.fill();
+    
+         ctx.fillStyle = fg;
+         ctx.fillRect(1, h - ((h / 5) * 3), w - 2, (h / 2));
+   
+         ctx.fillStyle = "rgba(0,0,0,255)";
+         ctx.fillText("mu", 2, h - (h / 5));
+         return ctx.getImageData(0, 0, canvas.width, canvas.height);
+      };
+
+      var init = function() {
+         chrome.tabs.onCreated.addListener(function(tab) {
+            chrome.browserAction.setIcon({imageData:badge(), tabId:tab.id});
+         });
+         chrome.browserAction.setIcon({imageData:badge()});
+      };
+    </script>
+  </head>
+  <body onload="init()">
+   <canvas id="icon" width="19" height="19"></canvas>
+  </body>
+</html>

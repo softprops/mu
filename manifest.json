@@ -1,0 +1,16 @@
+{
+  "name": "mu",
+  "version": "1.0",
+  "description": "meetup",
+  "background_page": "bg.html",
+  "browser_action": {
+    "popup": "mu.html"
+  },
+  "permissions": [
+    "tabs",
+    "notifications",
+    "geolocation",
+    "https://api.meetup.com/",
+    "https://ajax.googleapis.com/"
+   ]
+}

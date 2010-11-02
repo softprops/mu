@@ -1,0 +1,92 @@
+* { margin:0; padding:0; }
+body { font-family:helvetica; color:#333; }
+a:link, a:visited { text-decoration:none; color:#FF0084; }
+#container { height: 300px; width:400px; }
+.rsvpcnt { font-size: 24px; font-weight:bold; }
+img.g { display:block; }
+.where, .when { font-size:.75em; color:#ccc; }
+.clearfix:after { content: "."; display: block; clear: both; visibility: hidden; line-height: 0; height: 0; }
+.clearfix { display: inline-block; }
+html[xmlns] .clearfix { display: block; }
+* html .clearfix { height: 1%; }
+#my-events li, #near-events li { margin:.25em 0; height:110px; }
+.btn { 
+ background-color:#C83C6A; 
+ background-image:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#D9608B), to(#C83C6A));  
+ border:1px solid #D13161;
+ -webkit-box-shadow:rgba(255, 255, 255, 0.546875) 0px 1px 1px 0px;
+ border-radius:4px 4px;
+ color:#fff;
+ padding:5px;
+ text-decoration:none;
+ text-shadow:rgba(1, 1, 1, 0.246094) -1px -1px 1px;
+}
+.btn:hover {
+  background:#FF7979;
+  -webkit-transition: background-color .5s linear;
+  transition: background-color .5s linear;  
+}
+#header { background: #333; width:385px; color:#fff; padding:.5em; }
+#header h1 { float:left; }
+#header span { font-size:.5em; }
+#header div a#connect { float:right; }
+input[type="text"] { font-size:18px; color:#333; padding:.1em; margin-right:.5em; }
+#header #me { clear:both; }
+#header #me a { float:none; }
+a.out { color:#FD91C9; }
+#errors { color:red; }
+#nav li { 
+  float:left; 
+  padding:.5em; 
+  margin:.25em .25em 0 .25em; 
+  background:#eee; 
+  -webkit-box-shadow:rgba(182, 182, 182, 0.546875) 0px 0px 5px 0px;
+  border-radius:4px 4px 0 0;
+}
+#nav li a {
+  color:#333;
+}
+.ename { color:#FD91C9; }
+#contents { clear:both; }
+#nav li.active { background:#ccc; }
+.loading { background: url('../images/loading.gif') no-repeat 50% 50%; }
+#process { width: 398px; height: 38px; border-bottom: 1px solid #eee; }
+.iwrap {
+  height: 100px;
+  width: 100px;
+  overflow:hidden;
+  position:absolute;
+}
+.iwrap img {
+  display:inline;
+  position:relative;
+  z-index:1;
+  float:left;
+}
+.iwrap .imeta {
+  height:100px;
+  width:100px;
+  position:relative;
+  left:0;
+  z-index: 2;
+  background:#fff;
+  opacity:0;
+}
+
+.iwrap .imeta:hover {
+  opacity:0.75;
+  -webkit-transition: opacity .25s linear;
+  transition: opacity .25s linear;
+}
+
+.iwrap .imeta span {
+  z-index: 3;
+  color:#333;
+  position:absolute;
+  top:25%;
+  left:25%;
+}
+.emeta {
+  margin-left:110px;
+  width:250px;
+}
