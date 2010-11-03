@@ -39,14 +39,21 @@
    <script type="text/javascript" src="js/mu.js"></script>
    <script type="text/javascript" src="js/templates.js"></script>
    <script type="text/javascript" src="js/geo.js"></script>
+   <script type="text/javascript" src="js/stores.js"></script>
    <script type="text/javascript">
      (function($){
+       
        $("#keybox").hide();
        $("#lists").hide();
+
        var error = function(msg) {
          console.log("error " + msg);
          $("#errors").html(msg);
        };
+
+       var store = Store({
+         onError: error
+       });
 
        var keyPrompt = function(after) {
          $("#keybox").show("fast");
@@ -63,20 +70,49 @@
          var mu = M({key:key});
          mu.members({"relation":"self"}, function(res) {
            var mems = res.results;
+           console.log(res);
            if(mems === undefined) {
-             localStorage.removeItem("mu:api_key");
+             store.remove("mu:api_key");
              error("Invalid api key");
              connect();
            } else {
              $("#connect").hide();
              $("#errors").empty();
              $("#lists").show();
-             localStorage.setItem("mu:api_key", key);
+             store.set("mu:api_key", key);
              var member_id = mems[0].id;
-             localStorage.setItem("mu:member_id", member_id); 
+             store.set("mu:member_id", member_id); 
              $("#me").html(T.user(mems[0]));
              bindOut();    
              var locCache;
+
+            var renderEvents = function(id) {
+              return function(res) {
+                console.log(res);
+                $("#process").removeClass("loading");
+                var l = $(id);
+                var events = res.results;
+                for(e in events) {
+                  l.append(['<li>', T.event(events[e]), '</li>'].join(''));
+                }
+                if(res.meta.next.length > 0) {
+                  var more = '<li><a class="more" href="#">more</a></li>';
+                  l.append(more);
+                  $(".more").click(function(e){
+                    var self = $(this);
+                    self.text("");
+                    self.parent().addClass("loading");
+                    e.preventDefault();
+                    mu.more(res.meta.next, function(mres) {
+                      console.log(mres);
+                      self.parent().remove();
+                      renderEvents(id)(mres);  
+                    });
+                    return false;
+                  });
+                }
+              };
+            };
 
              var showNear = function() {
                $("#near").addClass("active");
@@ -85,6 +121,7 @@
                $("#mine-content").hide();
                $("#process").addClass("loading");
                $("#near-events").empty();
+
                var success = function(position) {
                  console.log("found location " + position);
                  locCache = position;
@@ -92,17 +129,9 @@
                   lat: position.coords.latitude, 
                   lon: position.coords.longitude,
                   page: 10
-                 }, function(res) {
-                  console.log(res);
-                  $("#process").removeClass("loading");
-                  var l = $("#near-events");
-                  var events = res.results;
-                  for(e in events) {
-                    l.append(['<li>', T.event(events[e]), '</li>'].join(''));
-                  }
-                  console.log("done rendering");
-                });
+                 }, renderEvents("#near-events"));
                };
+
                var lerr = function(m) {
                  error(m.message);
                  $("#process").removeClass("loading");
@@ -127,14 +156,7 @@
                  args.lat = locCache.coords.latitude;
                  args.lon = locCache.coords.longitude;
                }
-               mu.events(args, function(res) {
-                  $("#process").removeClass("loading");
-                  var l = $("#my-events");
-                  var events = res.results;
-                  for(e in events) {
-                    l.append(['<li>', T.event(events[e]), '</li>'].join(''));
-                  }
-               }); 
+               mu.events(args, renderEvents("#my-events"));
              };
 
              $("#near").click(function(e) {
@@ -155,10 +177,11 @@
        };
 
        var connect = function() {
-         var api_key = localStorage.getItem("mu:api_key");
+         var api_key = store.get("mu:api_key");
          if(api_key === null) {
            keyPrompt(onConnect);
          } else {
+           console.log("key " + api_key);
            onConnect(api_key);
          }
        };
@@ -169,8 +192,8 @@
         $("#my-events").empty();
         $("#near-events").empty();
         $("#lists").hide();
-        localStorage.removeItem("mu:api_key");
-        localStorage.removeItem("mu:member_id")
+        store.remove("mu:api_key");
+        store.remove("mu:member_id")
       };
        
        var bindOut = function() {
@@ -195,7 +218,7 @@
           return false;
        });
         
-       if(localStorage.getItem("mu:member_id")) {
+       if(store.get("mu:member_id")) {
          $("#connect").hide();
          connect();
        } else {

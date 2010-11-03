@@ -16,6 +16,9 @@ var M = (function(conf) {
     },
     events: function(args, cb) {
       $.getJSON(api + "events.json?callback=?", sign(args), cb);
+    },
+    more: function(url, cb) {
+      $.getJSON(url + "&callback=?", {}, cb);
     }
   }
 });
