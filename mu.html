@@ -47,7 +47,6 @@
        $("#lists").hide();
 
        var error = function(msg) {
-         console.log("error " + msg);
          $("#errors").html(msg);
        };
 
@@ -70,7 +69,6 @@
          var mu = M({key:key});
          mu.members({"relation":"self"}, function(res) {
            var mems = res.results;
-           console.log(res);
            if(mems === undefined) {
              store.remove("mu:api_key");
              error("Invalid api key");
@@ -88,7 +86,6 @@
 
             var renderEvents = function(id) {
               return function(res) {
-                console.log(res);
                 $("#process").removeClass("loading");
                 var l = $(id);
                 var events = res.results;
@@ -104,7 +101,6 @@
                     self.parent().addClass("loading");
                     e.preventDefault();
                     mu.more(res.meta.next, function(mres) {
-                      console.log(mres);
                       self.parent().remove();
                       renderEvents(id)(mres);  
                     });
@@ -123,7 +119,6 @@
                $("#near-events").empty();
 
                var success = function(position) {
-                 console.log("found location " + position);
                  locCache = position;
                  mu.events({
                   lat: position.coords.latitude, 
@@ -181,7 +176,6 @@
          if(api_key === null) {
            keyPrompt(onConnect);
          } else {
-           console.log("key " + api_key);
            onConnect(api_key);
          }
        };
