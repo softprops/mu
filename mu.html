@@ -129,8 +129,21 @@
                  }, renderEvents("#near-events"));
                };
 
-               var lerr = function(m) {
-                 error(m.message);
+               var lerr = function(e) {
+                 switch(e.code) {
+                   case e.TIMEOUT:
+                     error("Geolocating timed out");
+                     break;
+                   case e.POSITION_UNAVAILABLE:
+                     error("Geolocation position not available");
+                     break;
+                   case e.PERMISSION_DENIED:
+                     error("Geolocation permission denied");
+                     break;
+                   case e.UNKNOWN_ERROR:
+                     error("Error fetching geolocation");
+                     break;
+                 }
                  $("#process").removeClass("loading");
                };
                Geo.locate(success, lerr);
