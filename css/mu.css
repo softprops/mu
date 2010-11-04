@@ -118,3 +118,9 @@ a:hover {
   margin-left:110px;
   width:250px;
 }
+#my-events li.next, #near-events li.next {
+  height: 30px;
+  background-color:#eee;
+  text-align:center;
+  padding:.5em;
+}

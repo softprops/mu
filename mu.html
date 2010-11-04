@@ -95,13 +95,15 @@
                 if(res.meta.next.length > 0) {
                   var more = '<li><a class="more" href="#">more</a></li>';
                   l.append(more);
-                  $(".more").click(function(e){
+                  var mctl = $(".more"), li = mctl.parent();
+                  li.addClass("next");
+                  mctl.click(function(e){
+                    e.preventDefault();
                     var self = $(this);
                     self.text("");
-                    self.parent().addClass("loading");
-                    e.preventDefault();
+                    li.addClass("loading");
                     mu.more(res.meta.next, function(mres) {
-                      self.parent().remove();
+                      li.remove();
                       renderEvents(id)(mres);  
                     });
                     return false;
